@@ -1,0 +1,12 @@
+<table class="table">
+    <thead>
+        <th>Marka</th>
+        <th>Araba</th>
+        <th>Müşteri Ad Soyad</th>
+    </thead>
+<tr *ngFor="let rental of rentals">
+    <td>{{rental.brandName}}</td>
+    <td>{{rental.carName}}</td>
+    <td>{{rental.customerFullName}}</td>
+</tr>
+</table>
