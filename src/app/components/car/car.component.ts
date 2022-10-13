@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { CarDetailDtoModel } from 'src/app/models/car/carDetailDtoModel';
+import { ActivatedRoute } from '@angular/router';
+import { CarDetailDto } from 'src/app/models/car/carDetailDto';
 import { Car } from 'src/app/models/car/carModel';
 import { CarService } from 'src/app/services/car.service';
 
@@ -10,12 +11,29 @@ import { CarService } from 'src/app/services/car.service';
 })
 export class CarComponent implements OnInit {
 
-  carDetail:CarDetailDtoModel[] = []
+  carDetail:CarDetailDto[] = []
+  currentCar:CarDetailDto
+  
 
-  constructor(private carService:CarService) { }
+  constructor(private carService:CarService,
+    private activatedRoute:ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.getCarDetail()
+    this.activatedRoute.params.subscribe(params => {
+      if(params["brandId"]){
+        this.getCarsByBrandId(params["brandId"]);
+      }else{
+        this.getCarDetail()
+      }
+    })
+
+    this.activatedRoute.params.subscribe(params => {
+      if(params["colorId"]){
+        this.getCarsByColorId(params["colorId"])
+      }else{
+        this.getCarDetail();
+      }
+    })
   }
 
   getCarDetail(){
@@ -24,6 +42,20 @@ export class CarComponent implements OnInit {
     })
   }
 
+  getCarsByBrandId(brandId:number){
+    this.carService.getCarsByBrandId(brandId).subscribe(response => {
+      this.carDetail = response.data
+    })
+  }
+
+  getCarsByColorId(colorId:number){
+    this.carService.getCarsByColorId(colorId).subscribe(response => {
+      this.carDetail = response.data
+    })
+  }
+  setCurrentCar(car:CarDetailDto){
+    this.currentCar = car
+  }
 
 
 }
